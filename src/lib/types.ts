@@ -42,6 +42,7 @@ export type GameEvent = {
   shotKind?: "layup" | "post" | "mid";
   assistPlayerId?: string;
   videoTs?: number;
+  quarter?: number;
 };
 
 /** 한 경기에서 선수 한 명의 기록. game_events 를 집계해서 만든다. */

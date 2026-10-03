@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Bebas_Neue, Noto_Sans_KR } from "next/font/google";
+import Link from "next/link";
 import { Header } from "@/components/Header";
 import { TEAM_NAME } from "@/config";
 import "./globals.css";
@@ -32,7 +33,12 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col font-sans">
         <Header />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">{children}</main>
-        <footer className="py-6 text-center text-xs text-gray-600">© {TEAM_NAME}</footer>
+        <footer className="flex justify-center gap-3 py-6 text-xs text-gray-600">
+          <span>© {TEAM_NAME}</span>
+          <Link href="/admin" className="hover:text-gray-400">
+            기록 관리
+          </Link>
+        </footer>
       </body>
     </html>
   );

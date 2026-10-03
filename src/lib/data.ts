@@ -41,6 +41,20 @@ export function aggregateBoxScores(events: GameEvent[]): Record<string, BoxScore
   return Object.fromEntries([...lines].map(([gameId, byPlayer]) => [gameId, [...byPlayer.values()]]));
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Supabase 행 (타입 생성 안 함)
+export function toGameEvent(e: any): GameEvent {
+  return {
+    id: e.id,
+    gameId: e.game_id,
+    playerId: e.player_id,
+    type: e.type,
+    shotKind: e.shot_kind ?? undefined,
+    assistPlayerId: e.assist_player_id ?? undefined,
+    videoTs: e.video_ts === null || e.video_ts === undefined ? undefined : Number(e.video_ts),
+    quarter: e.quarter ?? undefined,
+  };
+}
+
 const PAGE = 1000; // Supabase 기본 최대 반환 행 수
 
 /** 1000행 제한을 넘는 테이블을 끝까지 읽는다 */
@@ -89,16 +103,18 @@ export async function getSeason(): Promise<Season> {
       opponentScore: g.opponent_score,
       isComplete: g.is_complete,
     })),
-    boxScores: aggregateBoxScores(
-      eventRows.map((e) => ({
-        id: e.id,
-        gameId: e.game_id,
-        playerId: e.player_id,
-        type: e.type,
-        shotKind: e.shot_kind ?? undefined,
-        assistPlayerId: e.assist_player_id ?? undefined,
-        videoTs: e.video_ts ?? undefined,
-      })),
-    ),
+    boxScores: aggregateBoxScores(eventRows.map(toGameEvent)),
   };
+}
+
+/** 한 경기의 기록 (기록 순서대로) */
+export async function getGameEvents(gameId: string): Promise<GameEvent[]> {
+  const { data, error } = await supabase()
+    .from("game_events")
+    .select("*")
+    .eq("game_id", gameId)
+    .order("created_at")
+    .range(0, 4999);
+  if (error) throw error;
+  return data.map(toGameEvent);
 }
