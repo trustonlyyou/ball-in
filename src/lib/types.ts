@@ -1,4 +1,4 @@
-export const POSITIONS = ["PG", "SG", "SF", "PF", "C"] as const;
+export const POSITIONS = ["G", "F", "C"] as const;
 export type Position = (typeof POSITIONS)[number];
 
 export type Player = {
