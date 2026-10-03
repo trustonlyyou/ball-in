@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { BoxScoreTable, type BoxScoreRow } from "@/components/BoxScoreTable";
 import { TEAM_NAME } from "@/config";
 import { getSeason } from "@/lib/data";
+import { buildClips } from "@/lib/highlights";
 import { fmtLongDate } from "@/lib/format";
 import { gameResult, points, rebounds } from "@/lib/stats";
 
@@ -15,6 +16,7 @@ export default async function GamePage(props: PageProps<"/games/[id]">) {
   if (!game) notFound();
 
   const g = gameResult(season, game);
+  const hasClips = buildClips(season).some((c) => c.gameId === g.id);
   const rows: BoxScoreRow[] = (season.boxScores[g.id] ?? []).flatMap((l) => {
     const player = season.players.find((p) => p.id === l.playerId);
     return player ? [{ ...l, player, pts: points(l), reb: rebounds(l) }] : [];
@@ -53,6 +55,17 @@ export default async function GamePage(props: PageProps<"/games/[id]">) {
             </span>
           ) : (
             <span className="rounded-full bg-gray-800 px-3 py-1 text-sm font-bold text-gray-300">경기 예정</span>
+          )}
+          {hasClips && (
+            <Link
+              href={`/highlights/game/${g.id}`}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-full bg-blue-500/20 px-4 text-sm font-bold text-blue-300 hover:bg-blue-500/30"
+            >
+              <svg aria-hidden viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+                <path d="M6 4.5v11l9-5.5-9-5.5z" />
+              </svg>
+              이 경기 하이라이트
+            </Link>
           )}
           {g.youtubeUrl && (
             <a

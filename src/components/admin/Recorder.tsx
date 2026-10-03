@@ -1,11 +1,12 @@
 "use client";
 
-import { useEffect, useRef, useState, useTransition } from "react";
+import { useState, useTransition } from "react";
 import { addEvent, addOpponentScore, deleteEvent, setAssist } from "@/app/admin/actions";
 import { TEAM_NAME } from "@/config";
 import { EVENT_POINTS, eventLabel, quarterLabel } from "@/lib/events";
 import type { EventType, Game, GameEvent, Player } from "@/lib/types";
 import { fmtVideoTs, youtubeId } from "@/lib/youtube";
+import { useYouTube } from "../useYouTube";
 
 type ShotKind = "layup" | "post" | "mid";
 type Action = { type: EventType; label: string; shotKind?: ShotKind; tone: "made" | "miss" | "other" };
@@ -34,56 +35,6 @@ const TONE = {
 };
 
 const QUARTERS = [1, 2, 3, 4, 5];
-
-// ── YouTube IFrame API ────────────────────────────────
-
-type YTPlayer = { getCurrentTime(): number; seekTo(s: number, allowSeekAhead: boolean): void; playVideo(): void; destroy(): void };
-declare global {
-  interface Window {
-    YT?: { Player: new (el: HTMLElement, opts: object) => YTPlayer };
-    onYouTubeIframeAPIReady?: () => void;
-  }
-}
-
-function loadYouTubeApi(): Promise<void> {
-  if (window.YT?.Player) return Promise.resolve();
-  return new Promise((resolve) => {
-    const prev = window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady = () => {
-      prev?.();
-      resolve();
-    };
-    if (!document.querySelector('script[src="https://www.youtube.com/iframe_api"]')) {
-      const s = document.createElement("script");
-      s.src = "https://www.youtube.com/iframe_api";
-      document.head.appendChild(s);
-    }
-  });
-}
-
-function useYouTube(videoId: string | null) {
-  const el = useRef<HTMLDivElement>(null);
-  const player = useRef<YTPlayer | null>(null);
-  useEffect(() => {
-    if (!videoId || !el.current) return;
-    let cancelled = false;
-    loadYouTubeApi().then(() => {
-      if (cancelled || !el.current || !window.YT) return;
-      player.current = new window.YT.Player(el.current, {
-        videoId,
-        width: "100%",
-        height: "100%",
-        playerVars: { rel: 0, playsinline: 1, modestbranding: 1 },
-      });
-    });
-    return () => {
-      cancelled = true;
-      player.current?.destroy();
-      player.current = null;
-    };
-  }, [videoId]);
-  return { el, player };
-}
 
 // ── 기록 화면 ────────────────────────────────────────
 

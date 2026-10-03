@@ -12,3 +12,6 @@ export function fmtVideoTs(sec: number): string {
   const pad = (n: number) => String(n).padStart(2, "0");
   return h ? `${h}:${pad(m)}:${pad(r)}` : `${m}:${pad(r)}`;
 }
+
+/** 영상 썸네일 (포스터용) */
+export const youtubeThumb = (videoId: string) => `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
