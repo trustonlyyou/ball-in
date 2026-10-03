@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { TournamentFilter } from "@/components/TournamentFilter";
 import { getSeason } from "@/lib/data";
 import { fmtDate, fmtLongDate } from "@/lib/format";
 import { completedGames, seasonRecord, upcomingGames, type GameResult } from "@/lib/stats";
@@ -28,20 +29,7 @@ export default async function GamesPage(props: PageProps<"/games">) {
           </p>
         )}
       </div>
-
-      {/* 대회 필터 (URL ?t= 로 공유 가능) */}
-      {season.tournaments.length > 0 && (
-        <nav aria-label="대회 선택" className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1">
-          <FilterLink href="/games" active={!tournamentId}>
-            전체
-          </FilterLink>
-          {season.tournaments.map((x) => (
-            <FilterLink key={x.id} href={`/games?t=${x.id}`} active={tournamentId === x.id}>
-              {x.name}
-            </FilterLink>
-          ))}
-        </nav>
-      )}
+      <TournamentFilter basePath="/games" tournaments={season.tournaments} active={tournamentId} />
 
       {upcoming.length > 0 && (
         <section>
@@ -81,19 +69,6 @@ export default async function GamesPage(props: PageProps<"/games">) {
   );
 }
 
-function FilterLink({ href, active, children }: { href: string; active: boolean; children: React.ReactNode }) {
-  return (
-    <Link
-      href={href}
-      aria-current={active ? "page" : undefined}
-      className={`flex min-h-11 shrink-0 items-center rounded-full px-4 text-sm font-medium transition-colors duration-200 focus-visible:outline-2 focus-visible:outline-blue-400 ${
-        active ? "bg-blue-500 text-white" : "bg-gray-900 text-gray-400 hover:bg-gray-800 hover:text-gray-100"
-      }`}
-    >
-      {children}
-    </Link>
-  );
-}
 
 function GameCard({ game: g }: { game: GameResult }) {
   return (

@@ -1,4 +1,5 @@
 import type { Season } from "./data";
+import { EVENT_POINTS } from "./events";
 import type { BoxScoreLine, Game, Player } from "./types";
 
 export const points = (l: BoxScoreLine) => 2 * (l.fgm - l.tpm) + 3 * l.tpm + l.ftm;
@@ -142,4 +143,50 @@ export function age(birthDate: string, today = new Date()): number {
   const [y, m, d] = birthDate.split("-").map(Number);
   const beforeBirthday = today.getMonth() + 1 < m || (today.getMonth() + 1 === m && today.getDate() < d);
   return today.getFullYear() - y - (beforeBirthday ? 1 : 0);
+}
+
+export type PlayerSeasonStats = { player: Player; gp: number; totals: BoxScoreLine; pts: number; reb: number };
+
+/** 선수별 누적 기록 (출전 경기가 있는 선수만, 등번호순) */
+export function playerSeasonStats(s: Season, results: GameResult[]): PlayerSeasonStats[] {
+  const ids = new Set(results.map((r) => r.id));
+  const lines = Object.entries(s.boxScores).filter(([gid]) => ids.has(gid)).flatMap(([, ls]) => ls);
+  return s.players.flatMap((player) => {
+    const mine = lines.filter((l) => l.playerId === player.id);
+    if (!mine.length) return [];
+    const totals = { ...mine[0], playerId: player.id };
+    for (const k of ["fgm", "fga", "tpm", "tpa", "ftm", "fta", "oreb", "dreb", "ast", "stl", "blk", "tov", "pf"] as const)
+      totals[k] = sum(mine, (l) => l[k]);
+    return [{ player, gp: mine.length, totals, pts: points(totals), reb: rebounds(totals) }];
+  });
+}
+
+/** 쿼터별 경기당 평균 득점 (쿼터가 기록된 경기만 집계) */
+export function quarterScoring(s: Season, results: GameResult[]) {
+  const ids = new Set(results.map((r) => r.id));
+  const byQuarter = new Map<number, number>();
+  const games = new Set<string>();
+  for (const e of s.events) {
+    if (!ids.has(e.gameId) || e.quarter === undefined) continue;
+    games.add(e.gameId);
+    byQuarter.set(e.quarter, (byQuarter.get(e.quarter) ?? 0) + (EVENT_POINTS[e.type] ?? 0));
+  }
+  const n = games.size;
+  return {
+    games: n,
+    quarters: [...byQuarter.keys()].sort((a, b) => a - b).map((q) => ({ quarter: q, avg: n ? byQuarter.get(q)! / n : 0 })),
+  };
+}
+
+/** 상대팀별 전적 */
+export function opponentSplits(results: GameResult[]) {
+  const map = new Map<string, GameResult[]>();
+  for (const r of results) map.set(r.opponent, [...(map.get(r.opponent) ?? []), r]);
+  return [...map].map(([opponent, gs]) => ({
+    opponent,
+    games: gs.length,
+    wins: gs.filter((g) => g.won).length,
+    ptsAvg: sum(gs, (g) => g.ourScore) / gs.length,
+    oppAvg: sum(gs, (g) => g.opponentScore) / gs.length,
+  })).sort((a, b) => b.games - a.games || a.opponent.localeCompare(b.opponent));
 }

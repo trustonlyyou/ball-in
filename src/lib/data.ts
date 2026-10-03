@@ -7,6 +7,8 @@ export type Season = {
   games: Game[];
   /** gameId → 선수별 박스스코어 */
   boxScores: Record<string, BoxScoreLine[]>;
+  /** 원본 기록 (쿼터별 집계 등에 사용) */
+  events: GameEvent[];
 };
 
 const emptyLine = (playerId: string): BoxScoreLine => ({
@@ -77,6 +79,7 @@ export async function getSeason(): Promise<Season> {
     selectAll("game_events"),
   ]);
   for (const r of [players, tournaments, games]) if (r.error) throw r.error;
+  const events = eventRows.map(toGameEvent);
 
   return {
     players: players.data!
@@ -103,7 +106,8 @@ export async function getSeason(): Promise<Season> {
       opponentScore: g.opponent_score,
       isComplete: g.is_complete,
     })),
-    boxScores: aggregateBoxScores(eventRows.map(toGameEvent)),
+    boxScores: aggregateBoxScores(events),
+    events,
   };
 }
 
