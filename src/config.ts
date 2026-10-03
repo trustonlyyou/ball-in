@@ -1,1 +1,1 @@
-export const TEAM_NAME = "잡솨";
+export const TEAM_NAME = "JUST SHOOT";

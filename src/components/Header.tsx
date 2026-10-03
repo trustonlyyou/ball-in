@@ -21,10 +21,10 @@ export function Header() {
       <div className="mx-auto max-w-5xl px-4">
         <div className="flex h-14 items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 text-sm font-black text-white">
-              잡
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 pt-0.5 font-display text-base text-white">
+              JS
             </span>
-            <span className="text-lg font-black tracking-tight">{TEAM_NAME}</span>
+            <span className="pt-0.5 font-display text-2xl tracking-wide">{TEAM_NAME}</span>
           </Link>
         </div>
         <nav className="-mb-px flex gap-1 overflow-x-auto">

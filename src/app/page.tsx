@@ -34,7 +34,7 @@ export default async function Home() {
       {/* 시즌 요약 */}
       <section className="rounded-2xl border border-gray-800 bg-gradient-to-br from-blue-950/60 to-gray-900 p-5 sm:p-6">
         <p className="text-sm text-blue-300">2026 시즌</p>
-        <h1 className="mt-1 text-2xl font-black sm:text-3xl">{TEAM_NAME}</h1>
+        <h1 className="mt-1 font-display text-4xl tracking-wide sm:text-5xl">{TEAM_NAME}</h1>
         <div className="mt-5 flex flex-wrap items-end gap-x-8 gap-y-4">
           <div>
             <p className="text-xs text-gray-400">시즌 전적</p>
