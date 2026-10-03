@@ -1,5 +1,6 @@
 import { TEAM_NAME } from "@/config";
 import { getSeason } from "@/lib/data";
+import { fmtDate, fmtPct } from "@/lib/format";
 import {
   completedGames,
   leaders,
@@ -11,11 +12,6 @@ import {
   type Leader,
 } from "@/lib/stats";
 
-const fmtDate = (d: string) => {
-  const [, m, day] = d.split("-");
-  return `${Number(m)}.${Number(day)}`;
-};
-const fmtPct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
 export const dynamic = "force-dynamic";
 

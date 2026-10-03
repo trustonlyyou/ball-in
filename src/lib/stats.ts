@@ -14,7 +14,7 @@ export type GameResult = Game & {
   margin: number;
 };
 
-function toResult(s: Season, g: Game): GameResult {
+export function gameResult(s: Season, g: Game): GameResult {
   const lines = s.boxScores[g.id] ?? [];
   const ourScore = sum(lines, points);
   return {
@@ -30,7 +30,7 @@ function toResult(s: Season, g: Game): GameResult {
 export function completedGames(s: Season): GameResult[] {
   return s.games
     .filter((g) => g.isComplete)
-    .map((g) => toResult(s, g))
+    .map((g) => gameResult(s, g))
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
