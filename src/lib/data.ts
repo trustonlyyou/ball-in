@@ -66,7 +66,16 @@ export async function getSeason(): Promise<Season> {
 
   return {
     players: players.data!
-      .map((p) => ({ id: p.id, name: p.name, number: p.number, position: p.position ?? undefined }))
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        number: p.number,
+        positions: p.positions ?? [],
+        heightCm: p.height_cm ?? undefined,
+        birthDate: p.birth_date ?? undefined,
+        isElite: p.is_elite ?? false,
+        photoUrl: p.photo_url ?? undefined,
+      }))
       .sort((a, b) => Number(a.number) - Number(b.number)),
     tournaments: tournaments.data!.map((t) => ({ id: t.id, name: t.name })),
     games: games.data!.map((g) => ({

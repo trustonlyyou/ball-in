@@ -125,3 +125,21 @@ export function teamRecords(s: Season, results: GameResult[]): TeamRecord[] {
     ...(wins.length ? [pick("최다 점수차 승리", (r) => r.margin, "max", wins)] : []),
   ];
 }
+
+/** 완료된 경기 중 기록이 하나라도 있는 경기 수 (선수별) */
+export function gamesPlayed(s: Season): Record<string, number> {
+  const done = new Set(s.games.filter((g) => g.isComplete).map((g) => g.id));
+  const counts: Record<string, number> = {};
+  for (const [gameId, lines] of Object.entries(s.boxScores)) {
+    if (!done.has(gameId)) continue;
+    for (const l of lines) counts[l.playerId] = (counts[l.playerId] ?? 0) + 1;
+  }
+  return counts;
+}
+
+/** 만 나이 */
+export function age(birthDate: string, today = new Date()): number {
+  const [y, m, d] = birthDate.split("-").map(Number);
+  const beforeBirthday = today.getMonth() + 1 < m || (today.getMonth() + 1 === m && today.getDate() < d);
+  return today.getFullYear() - y - (beforeBirthday ? 1 : 0);
+}

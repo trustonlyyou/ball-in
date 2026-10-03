@@ -1,8 +1,15 @@
+export const POSITIONS = ["PG", "SG", "SF", "PF", "C"] as const;
+export type Position = (typeof POSITIONS)[number];
+
 export type Player = {
   id: string;
   name: string;
   number: string;
-  position?: string;
+  positions: Position[];
+  heightCm?: number;
+  birthDate?: string; // YYYY-MM-DD
+  isElite: boolean; // 선출
+  photoUrl?: string;
 };
 
 export type Tournament = {
