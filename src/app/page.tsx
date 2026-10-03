@@ -82,44 +82,49 @@ export default async function Home() {
         )}
       </Section>
 
-      {/* 부문별 리더 */}
-      <Section title="부문별 리더">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
-          <LeaderCard label="득점" unit="PPG" leader={top.ppg} format={(v) => v.toFixed(1)} />
-          <LeaderCard label="리바운드" unit="RPG" leader={top.rpg} format={(v) => v.toFixed(1)} />
-          <LeaderCard label="어시스트" unit="APG" leader={top.apg} format={(v) => v.toFixed(1)} />
-          <LeaderCard label="3점 성공률" unit="3P%" leader={top.fg3Pct} format={fmtPct} />
-          <LeaderCard label="슈팅 효율" unit="TS%" leader={top.tsPct} format={fmtPct} />
-        </div>
-      </Section>
+      {/* 아래 통계는 완료된 경기가 있을 때만 */}
+      {results.length > 0 && (
+        <>
+          {/* 부문별 리더 */}
+          <Section title="부문별 리더">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
+              <LeaderCard label="득점" unit="PPG" leader={top.ppg} format={(v) => v.toFixed(1)} />
+              <LeaderCard label="리바운드" unit="RPG" leader={top.rpg} format={(v) => v.toFixed(1)} />
+              <LeaderCard label="어시스트" unit="APG" leader={top.apg} format={(v) => v.toFixed(1)} />
+              <LeaderCard label="3점 성공률" unit="3P%" leader={top.fg3Pct} format={fmtPct} />
+              <LeaderCard label="슈팅 효율" unit="TS%" leader={top.tsPct} format={fmtPct} />
+            </div>
+          </Section>
 
-      {/* 팀 평균 */}
-      <Section title="팀 평균">
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
-          <StatTile label="평균 득점" value={avg.ptsAvg.toFixed(1)} />
-          <StatTile label="평균 실점" value={avg.oppAvg.toFixed(1)} />
-          <StatTile label="야투율" value={fmtPct(avg.fgPct)} />
-          <StatTile label="3점 성공률" value={fmtPct(avg.fg3Pct)} />
-          <StatTile label="자유투 성공률" value={fmtPct(avg.ftPct)} />
-        </div>
-      </Section>
+          {/* 팀 평균 */}
+          <Section title="팀 평균">
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-5">
+              <StatTile label="평균 득점" value={avg.ptsAvg.toFixed(1)} />
+              <StatTile label="평균 실점" value={avg.oppAvg.toFixed(1)} />
+              <StatTile label="야투율" value={fmtPct(avg.fgPct)} />
+              <StatTile label="3점 성공률" value={fmtPct(avg.fg3Pct)} />
+              <StatTile label="자유투 성공률" value={fmtPct(avg.ftPct)} />
+            </div>
+          </Section>
 
-      {/* 팀 기록 */}
-      <Section title="팀 기록">
-        <ul className="grid gap-3 sm:grid-cols-2">
-          {records.map((r) => (
-            <li key={r.label} className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900 px-4 py-3">
-              <div className="min-w-0">
-                <p className="text-sm text-gray-400">{r.label}</p>
-                <p className="truncate text-xs text-gray-500">
-                  {fmtDate(r.game.date)} vs {r.game.opponent} ({r.game.ourScore}-{r.game.opponentScore})
-                </p>
-              </div>
-              <p className="text-2xl font-black tabular-nums">{r.value}</p>
-            </li>
-          ))}
-        </ul>
-      </Section>
+          {/* 팀 기록 */}
+          <Section title="팀 기록">
+            <ul className="grid gap-3 sm:grid-cols-2">
+              {records.map((r) => (
+                <li key={r.label} className="flex items-center justify-between rounded-xl border border-gray-800 bg-gray-900 px-4 py-3">
+                  <div className="min-w-0">
+                    <p className="text-sm text-gray-400">{r.label}</p>
+                    <p className="truncate text-xs text-gray-500">
+                      {fmtDate(r.game.date)} vs {r.game.opponent} ({r.game.ourScore}-{r.game.opponentScore})
+                    </p>
+                  </div>
+                  <p className="text-2xl font-black tabular-nums">{r.value}</p>
+                </li>
+              ))}
+            </ul>
+          </Section>
+        </>
+      )}
     </div>
   );
 }
