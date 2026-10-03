@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Noto_Sans_KR } from "next/font/google";
+import { Bebas_Neue, Noto_Sans_KR } from "next/font/google";
 import { Header } from "@/components/Header";
 import { TEAM_NAME } from "@/config";
 import "./globals.css";
@@ -8,6 +8,13 @@ const notoSansKr = Noto_Sans_KR({
   variable: "--font-noto-sans-kr",
   subsets: ["latin"],
   weight: ["400", "500", "700", "900"],
+});
+
+// 등번호·숫자용 디스플레이 폰트
+const bebasNeue = Bebas_Neue({
+  variable: "--font-bebas-neue",
+  subsets: ["latin"],
+  weight: "400",
 });
 
 export const metadata: Metadata = {
@@ -21,7 +28,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="ko" className={`${notoSansKr.variable} h-full antialiased`}>
+    <html lang="ko" className={`${notoSansKr.variable} ${bebasNeue.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
         <Header />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">{children}</main>

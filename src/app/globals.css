@@ -2,6 +2,7 @@
 
 @theme inline {
   --font-sans: var(--font-noto-sans-kr), system-ui, sans-serif;
+  --font-display: var(--font-bebas-neue), var(--font-noto-sans-kr), sans-serif;
 }
 
 body {
