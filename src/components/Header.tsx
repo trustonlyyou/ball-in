@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { TEAM_NAME } from "@/data/sample";
+import { TEAM_NAME } from "@/config";
 
 const NAV = [
   { href: "/", label: "홈" },

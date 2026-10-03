@@ -22,7 +22,22 @@ export type Game = {
   isComplete: boolean;
 };
 
-/** 한 경기에서 선수 한 명의 기록. 득점·리바운드는 저장하지 않고 계산한다. */
+export type EventType =
+  | "fg2_made" | "fg2_miss" | "fg3_made" | "fg3_miss" | "ft_made" | "ft_miss"
+  | "oreb" | "dreb" | "stl" | "blk" | "tov" | "pf";
+
+/** 경기 중 기록 하나 (game_events 테이블) */
+export type GameEvent = {
+  id: string;
+  gameId: string;
+  playerId: string;
+  type: EventType;
+  shotKind?: "layup" | "post" | "mid";
+  assistPlayerId?: string;
+  videoTs?: number;
+};
+
+/** 한 경기에서 선수 한 명의 기록. game_events 를 집계해서 만든다. */
 export type BoxScoreLine = {
   playerId: string;
   fgm: number; // 야투 성공 (3점 포함)

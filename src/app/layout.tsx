@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Noto_Sans_KR } from "next/font/google";
 import { Header } from "@/components/Header";
-import { TEAM_NAME } from "@/data/sample";
+import { TEAM_NAME } from "@/config";
 import "./globals.css";
 
 const notoSansKr = Noto_Sans_KR({

@@ -1,4 +1,4 @@
-import { boxScores, games, players, tournaments } from "@/data/sample";
+import type { Season } from "./data";
 import type { BoxScoreLine, Game, Player } from "./types";
 
 export const points = (l: BoxScoreLine) => 2 * (l.fgm - l.tpm) + 3 * l.tpm + l.ftm;
@@ -14,12 +14,12 @@ export type GameResult = Game & {
   margin: number;
 };
 
-function toResult(g: Game): GameResult {
-  const lines = boxScores[g.id] ?? [];
+function toResult(s: Season, g: Game): GameResult {
+  const lines = s.boxScores[g.id] ?? [];
   const ourScore = sum(lines, points);
   return {
     ...g,
-    tournamentName: tournaments.find((t) => t.id === g.tournamentId)?.name ?? "",
+    tournamentName: s.tournaments.find((t) => t.id === g.tournamentId)?.name ?? "",
     ourScore,
     won: ourScore > g.opponentScore,
     margin: ourScore - g.opponentScore,
@@ -27,15 +27,15 @@ function toResult(g: Game): GameResult {
 }
 
 /** 완료된 경기, 최신순 */
-export function completedGames(): GameResult[] {
-  return games
+export function completedGames(s: Season): GameResult[] {
+  return s.games
     .filter((g) => g.isComplete)
-    .map(toResult)
+    .map((g) => toResult(s, g))
     .sort((a, b) => b.date.localeCompare(a.date));
 }
 
-export function upcomingGames(): Game[] {
-  return games.filter((g) => !g.isComplete).sort((a, b) => a.date.localeCompare(b.date));
+export function upcomingGames(s: Season): Game[] {
+  return s.games.filter((g) => !g.isComplete).sort((a, b) => a.date.localeCompare(b.date));
 }
 
 export function seasonRecord(results: GameResult[]) {
@@ -55,10 +55,10 @@ export function seasonRecord(results: GameResult[]) {
 
 export type Leader = { player: Player; value: number };
 
-export function leaders(results: GameResult[]) {
+export function leaders(s: Season, results: GameResult[]) {
   const ids = new Set(results.map((r) => r.id));
-  const byPlayer = players.map((p) => {
-    const lines = Object.entries(boxScores)
+  const byPlayer = s.players.map((p) => {
+    const lines = Object.entries(s.boxScores)
       .filter(([gid]) => ids.has(gid))
       .flatMap(([, ls]) => ls.filter((l) => l.playerId === p.id));
     const gp = lines.length;
@@ -93,8 +93,8 @@ export function leaders(results: GameResult[]) {
   };
 }
 
-export function teamAverages(results: GameResult[]) {
-  const lines = results.flatMap((r) => boxScores[r.id] ?? []);
+export function teamAverages(s: Season, results: GameResult[]) {
+  const lines = results.flatMap((r) => s.boxScores[r.id] ?? []);
   const n = results.length || 1;
   return {
     ptsAvg: sum(results, (r) => r.ourScore) / n,
@@ -107,9 +107,9 @@ export function teamAverages(results: GameResult[]) {
 
 export type TeamRecord = { label: string; value: number; game: GameResult };
 
-export function teamRecords(results: GameResult[]): TeamRecord[] {
+export function teamRecords(s: Season, results: GameResult[]): TeamRecord[] {
   if (!results.length) return [];
-  const teamTotal = (r: GameResult, f: (l: BoxScoreLine) => number) => sum(boxScores[r.id] ?? [], f);
+  const teamTotal = (r: GameResult, f: (l: BoxScoreLine) => number) => sum(s.boxScores[r.id] ?? [], f);
   const pick = (label: string, f: (r: GameResult) => number, dir: "max" | "min", pool = results): TeamRecord => {
     const game = [...pool].sort((a, b) => (dir === "max" ? f(b) - f(a) : f(a) - f(b)))[0];
     return { label, value: f(game), game };

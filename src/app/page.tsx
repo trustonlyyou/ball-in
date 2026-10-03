@@ -1,4 +1,5 @@
-import { TEAM_NAME } from "@/data/sample";
+import { TEAM_NAME } from "@/config";
+import { getSeason } from "@/lib/data";
 import {
   completedGames,
   leaders,
@@ -16,13 +17,16 @@ const fmtDate = (d: string) => {
 };
 const fmtPct = (v: number) => `${(v * 100).toFixed(1)}%`;
 
-export default function Home() {
-  const results = completedGames();
+export const dynamic = "force-dynamic";
+
+export default async function Home() {
+  const season = await getSeason();
+  const results = completedGames(season);
   const record = seasonRecord(results);
-  const top = leaders(results);
-  const avg = teamAverages(results);
-  const records = teamRecords(results);
-  const next = upcomingGames()[0];
+  const top = leaders(season, results);
+  const avg = teamAverages(season, results);
+  const records = teamRecords(season, results);
+  const next = upcomingGames(season)[0];
   const winRate = record.total ? record.wins / record.total : 0;
 
   return (
