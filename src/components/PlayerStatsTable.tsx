@@ -79,6 +79,13 @@ export function PlayerStatsTable({ rows, team }: { rows: PlayerStatsRow[]; team:
     return (asc ? d : -d) || Number(a.player.number) - Number(b.player.number);
   });
 
+  // 칸별 1위 값 (성공률은 시도가 있는 선수만, GP 는 제외)
+  const leaderValue = Object.fromEntries(
+    COLUMNS.filter((c) => c.key !== "gp").map((c) => [c.key, Math.max(...rows.map((r) => sortValue(c, r, mode)))]),
+  );
+  const isLeader = (c: Column, r: PlayerStatsRow) =>
+    rows.length > 1 && c.key in leaderValue && leaderValue[c.key] > 0 && sortValue(c, r, mode) === leaderValue[c.key];
+
   const onSort = (key: string) => {
     if (key === sortKey) setAsc(!asc);
     else {
@@ -144,9 +151,9 @@ export function PlayerStatsTable({ rows, team }: { rows: PlayerStatsRow[]; team:
                 {COLUMNS.map((c) => (
                   <td
                     key={c.key}
-                    className={`px-2.5 py-2.5 text-center whitespace-nowrap ${c.strong ? "font-bold text-white" : "text-gray-300"} ${
-                      c.key === sortKey ? "bg-blue-500/5" : ""
-                    }`}
+                    className={`px-2.5 py-2.5 text-center whitespace-nowrap ${
+                      isLeader(c, r) ? "font-bold text-blue-300" : c.strong ? "font-bold text-white" : "text-gray-300"
+                    } ${c.key === sortKey ? "bg-blue-500/5" : ""}`}
                   >
                     {display(c, r, mode)}
                   </td>
@@ -169,7 +176,7 @@ export function PlayerStatsTable({ rows, team }: { rows: PlayerStatsRow[]; team:
         </table>
       </div>
       <p className="text-xs text-gray-500">
-        평균은 실제 출전 경기 기준이에요. 팀 줄은 경기당 팀 기록이에요. 헤더를 누르면 정렬돼요.
+        평균은 실제 출전 경기 기준이에요. 파란 굵은 글씨는 각 기록 1위예요. 헤더를 누르면 정렬돼요.
       </p>
     </div>
   );
