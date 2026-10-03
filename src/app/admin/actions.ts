@@ -37,6 +37,10 @@ export async function logout() {
 async function resolveTournament(fd: FormData) {
   const newName = text(fd, "newTournament");
   if (newName) {
+    // 같은 이름의 대회가 이미 있으면 재사용
+    const existing = await adminDb().from("tournaments").select("id").eq("name", newName).limit(1);
+    if (existing.error) throw existing.error;
+    if (existing.data.length) return existing.data[0].id as string;
     const { data, error } = await adminDb().from("tournaments").insert({ name: newName }).select("id").single();
     if (error) throw error;
     return data.id as string;

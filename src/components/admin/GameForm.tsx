@@ -1,4 +1,5 @@
 import type { Game, Tournament } from "@/lib/types";
+import { SubmitButton } from "./SubmitButton";
 
 const input =
   "block min-h-11 w-full rounded-lg border border-gray-700 bg-gray-950 px-3 text-base outline-none focus:border-blue-400";
@@ -58,12 +59,9 @@ export function GameForm({
         </>
       )}
 
-      <button
-        type="submit"
-        className="min-h-11 cursor-pointer rounded-lg bg-blue-500 px-6 font-bold text-white transition-colors hover:bg-blue-400 sm:col-span-2 sm:justify-self-start"
-      >
+      <SubmitButton className="min-h-11 cursor-pointer rounded-lg bg-blue-500 px-6 font-bold text-white transition-colors hover:bg-blue-400 sm:col-span-2 sm:justify-self-start">
         {submitLabel}
-      </button>
+      </SubmitButton>
     </form>
   );
 }

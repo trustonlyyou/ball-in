@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { DeleteGameButton } from "@/components/admin/DeleteGameButton";
 import { GameForm } from "@/components/admin/GameForm";
 import { Recorder } from "@/components/admin/Recorder";
 import { isAdmin } from "@/lib/admin";
@@ -36,11 +37,9 @@ export default async function RecordPage(props: PageProps<"/admin/games/[id]">) 
         <div className="mt-4">
           <GameForm action={updateGame.bind(null, id)} tournaments={season.tournaments} game={game} submitLabel="저장" />
         </div>
-        <form action={deleteGame.bind(null, id)} className="mt-6 border-t border-gray-800 pt-4">
-          <button type="submit" className="min-h-11 cursor-pointer rounded-lg px-3 text-sm text-red-300 hover:bg-red-500/10">
-            이 경기와 모든 기록 삭제
-          </button>
-        </form>
+        <div className="mt-6 border-t border-gray-800 pt-4">
+          <DeleteGameButton action={deleteGame.bind(null, id)} />
+        </div>
       </details>
     </div>
   );
