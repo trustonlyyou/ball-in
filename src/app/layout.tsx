@@ -21,10 +21,15 @@ const bebasNeue = Bebas_Neue({
 export const metadata: Metadata = {
   title: `${TEAM_NAME} 농구팀`,
   description: `${TEAM_NAME} 농구팀 경기 기록과 스탯`,
+  applicationName: TEAM_NAME,
+  // 아이폰 홈 화면 앱: 주소창 없이 실행, 상태바 위로 콘텐츠 (노치 여백은 헤더에서 처리)
+  appleWebApp: { capable: true, title: TEAM_NAME, statusBarStyle: "black-translucent" },
+  formatDetection: { telephone: false },
 };
 
 export const viewport: Viewport = {
   themeColor: "#030712",
+  viewportFit: "cover", // 노치·홈 바 영역까지 사용 → env(safe-area-inset-*) 로 여백
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -33,7 +38,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col font-sans">
         <Header />
         <main className="mx-auto w-full max-w-5xl flex-1 px-4 py-6">{children}</main>
-        <footer className="flex justify-center gap-3 py-6 text-xs text-gray-600">
+        <footer className="flex justify-center gap-3 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] text-xs text-gray-600">
           <span>© {TEAM_NAME}</span>
           <Link href="/admin" className="hover:text-gray-400">
             기록 관리
