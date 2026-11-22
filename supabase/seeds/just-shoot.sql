@@ -1,4 +1,4 @@
--- 잡솨 선수 명단 (이름, 등번호)
+-- JUST SHOOT 팀 전용 초기 명단. 다른 팀은 실행하지 말고 /admin/players 에서 선수를 추가하세요.
 insert into players (name, number) values
   ('신동광', '0'),
   ('복준영', '1'),
