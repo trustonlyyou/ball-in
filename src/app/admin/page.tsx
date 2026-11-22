@@ -21,6 +21,9 @@ export default async function AdminPage() {
     <div className="space-y-8">
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-2xl font-bold">기록 관리</h1>
+        <Link href="/admin/players" className="ml-auto inline-flex min-h-11 items-center rounded-lg bg-gray-900 px-4 text-sm font-bold text-gray-200 hover:bg-gray-800">
+          선수 관리
+        </Link>
         <form action={logout}>
           <button type="submit" className="min-h-11 cursor-pointer rounded-lg px-3 text-sm text-gray-400 hover:text-gray-100">
             로그아웃

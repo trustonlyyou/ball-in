@@ -51,6 +51,8 @@ export function Recorder({ game, players, initialEvents }: { game: Game; players
   const [pending, startTransition] = useTransition();
 
   const byId = new Map(players.map((p) => [p.id, p]));
+  // 지난 기록의 이름 표시는 전체 선수로, 새 기록 입력은 활성 선수만
+  const roster = players.filter((p) => p.isActive);
   const who = (id?: string) => {
     const p = id ? byId.get(id) : undefined;
     return p ? `#${p.number} ${p.name}` : "?";
@@ -188,7 +190,7 @@ export function Recorder({ game, players, initialEvents }: { game: Game; players
                 >
                   없음
                 </button>
-                {players
+                {roster
                   .filter((p) => p.id !== assistFor.playerId)
                   .map((p) => (
                     <button
@@ -208,7 +210,7 @@ export function Recorder({ game, players, initialEvents }: { game: Game; players
               <div>
                 <p className="mb-2 text-sm font-bold text-gray-400">1. 선수 선택</p>
                 <div className="grid grid-cols-4 gap-1.5 sm:grid-cols-6 lg:grid-cols-8">
-                  {players.map((p) => (
+                  {roster.map((p) => (
                     <button
                       key={p.id}
                       type="button"

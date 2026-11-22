@@ -46,7 +46,7 @@ export default async function StatsPage(props: PageProps<"/stats">) {
     { playerId: "team", fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, oreb: 0, dreb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0 },
   );
   const team: PlayerStatsRow = {
-    player: { id: "team", name: "팀", number: "", positions: [], isElite: false },
+    player: { id: "team", name: "팀", number: "", positions: [], isElite: false, isActive: true },
     gp: results.length,
     totals: teamTotals,
     pts: points(teamTotals),

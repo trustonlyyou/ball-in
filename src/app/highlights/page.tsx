@@ -11,9 +11,11 @@ export default async function HighlightsPage() {
   const season = await getSeason();
   const clips = buildClips(season);
 
-  const players: PickerPlayer[] = season.players.map((p) => {
+  const players: PickerPlayer[] = season.players.flatMap((p) => {
     const mine = clips.filter((c) => c.playerId === p.id);
-    return {
+    // 비활성 선수는 클립이 있을 때만 보여준다
+    if (!p.isActive && mine.length === 0) return [];
+    const picker: PickerPlayer = {
       id: p.id,
       name: p.name,
       number: p.number,
@@ -26,6 +28,7 @@ export default async function HighlightsPage() {
         .sort((a, b) => b.n - a.n)
         .slice(0, 2),
     };
+    return [picker];
   });
   const tournaments = tournamentHighlights(season, clips);
 

@@ -11,7 +11,7 @@ const POSITION_BAR: Record<string, string> = { G: "bg-sky-400", F: "bg-emerald-4
 export default async function LockerPage() {
   const season = await getSeason();
   const gp = gamesPlayed(season);
-  const players: RosterPlayer[] = season.players.map((p) => ({
+  const players: RosterPlayer[] = season.players.filter((p) => p.isActive).map((p) => ({
     ...p,
     age: p.birthDate ? age(p.birthDate) : undefined,
     gamesPlayed: gp[p.id] ?? 0,

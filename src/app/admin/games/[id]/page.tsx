@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { DeleteGameButton } from "@/components/admin/DeleteGameButton";
+import { ConfirmDeleteButton } from "@/components/admin/ConfirmDeleteButton";
 import { GameForm } from "@/components/admin/GameForm";
 import { Recorder } from "@/components/admin/Recorder";
 import { isAdmin } from "@/lib/admin";
@@ -38,7 +38,9 @@ export default async function RecordPage(props: PageProps<"/admin/games/[id]">) 
           <GameForm action={updateGame.bind(null, id)} tournaments={season.tournaments} game={game} submitLabel="저장" />
         </div>
         <div className="mt-6 border-t border-gray-800 pt-4">
-          <DeleteGameButton action={deleteGame.bind(null, id)} />
+          <ConfirmDeleteButton action={deleteGame.bind(null, id)} confirmMessage="이 경기와 모든 기록을 삭제할까요? 되돌릴 수 없어요.">
+            이 경기와 모든 기록 삭제
+          </ConfirmDeleteButton>
         </div>
       </details>
     </div>

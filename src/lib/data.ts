@@ -92,6 +92,7 @@ export async function getSeason(): Promise<Season> {
         birthDate: p.birth_date ?? undefined,
         isElite: p.is_elite ?? false,
         photoUrl: p.photo_url ?? undefined,
+        isActive: p.is_active ?? true,
       }))
       .sort((a, b) => Number(a.number) - Number(b.number)),
     tournaments: tournaments.data!.map((t) => ({ id: t.id, name: t.name })),

@@ -10,6 +10,8 @@ export type Player = {
   birthDate?: string; // YYYY-MM-DD
   isElite: boolean; // 선출
   photoUrl?: string;
+  /** false 면 명단·기록 화면에서 숨긴다 (지난 기록은 유지) */
+  isActive: boolean;
 };
 
 export type Tournament = {
