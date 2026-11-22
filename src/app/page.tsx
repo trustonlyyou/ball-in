@@ -26,6 +26,8 @@ export default async function Home() {
   const next = upcomingGames(season)[0];
   const winRate = record.total ? record.wins / record.total : 0;
   const form = results.slice(0, 5).reverse(); // 오래된 → 최근
+  // 가장 최근 경기(예정 포함)의 연도. 경기가 없으면 올해.
+  const seasonYear = (season.games.map((g) => g.date).sort().at(-1) ?? String(new Date().getFullYear())).slice(0, 4);
 
   // 지난 경기 최다 득점자
   const latest = results[0];
@@ -48,7 +50,7 @@ export default async function Home() {
         </span>
 
         <div className="relative">
-          <p className="text-xs font-bold tracking-[0.25em] text-blue-300">2026 SEASON</p>
+          <p className="text-xs font-bold tracking-[0.25em] text-blue-300">{seasonYear} SEASON</p>
           <h1 className="mt-1 font-display text-6xl leading-[0.9] tracking-wide sm:text-8xl">{TEAM_NAME}</h1>
 
           {record.total > 0 ? (

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { TEAM_NAME } from "@/config";
+import { TEAM_NAME, TEAM_SHORT } from "@/config";
 import { InstallButton } from "./InstallButton";
 
 const NAV = [
@@ -23,7 +23,7 @@ export function Header() {
         <div className="flex h-14 items-center gap-2">
           <Link href="/" className="flex items-center gap-2">
             <span className="flex h-8 w-8 items-center justify-center rounded-full bg-blue-500 pt-0.5 font-display text-base text-white">
-              JS
+              {TEAM_SHORT}
             </span>
             <span className="pt-0.5 font-display text-2xl tracking-wide">{TEAM_NAME}</span>
           </Link>
